@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
 using OdeToFoodData.Service;
+using OdeToFoodData.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,10 @@ namespace OdeToFood
 
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-            builder.RegisterType<InMemoryResturantData>()
+            builder.RegisterType<SqlResturantData>()
                 .As<IResturantData>()
-                .SingleInstance();
+                .InstancePerRequest();
+            builder.RegisterType<OdeToFoodDbContext>().InstancePerRequest();    
 
             var container = builder.Build();
 

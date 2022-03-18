@@ -11,6 +11,9 @@ namespace OdeToFoodData.Service
     {
         IEnumerable<Resturant> GetAll(); 
         Resturant Get(int id);
+        void Add(Resturant resturant);
+        void Update(Resturant resturant);
+        void Delete(int id);
     }
     public class InMemoryResturantData : IResturantData
     {
@@ -26,6 +29,22 @@ namespace OdeToFoodData.Service
             };
         }
 
+        public void Add(Resturant resturant)
+        {
+            restaurants.Add(resturant);
+            resturant.Id = restaurants.Max(r => r.Id) +1;
+            
+        }
+
+        public void Delete(int id)
+        {
+            var resturant = Get(id);
+            if (resturant != null)
+            {
+                restaurants.Remove(resturant);
+            }
+        }
+
         public Resturant Get(int id)
         {
             return restaurants.FirstOrDefault(r => r.Id == id); 
@@ -34,6 +53,16 @@ namespace OdeToFoodData.Service
         public IEnumerable<Resturant> GetAll()
         {
             return restaurants.OrderBy(r => r.Name);
+        }
+
+        public void Update(Resturant resturant)
+        {
+            var existing = Get(resturant.Id);
+            if (existing != null)
+            {
+                existing.Name = resturant.Name;
+                existing.Cuisine = resturant.Cuisine;
+            }
         }
     }
 }
